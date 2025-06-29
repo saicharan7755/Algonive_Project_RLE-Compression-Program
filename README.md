@@ -1,112 +1,197 @@
-# RLE Compression & Decompression Tool
+# 🗜️ RLE Compression Program
 
-A robust and user-friendly file compression and decompression program written in C++ using the Run-Length Encoding (RLE) algorithm. This tool is designed to efficiently reduce file sizes for text-based files and restore their original content with ease.
+This repository contains a simple yet effective **Run-Length Encoding (RLE) Compression Program**, developed as part of an internship project for **Algonive**.
 
 ---
 
-## ✨ Features
+## 📋 Project Overview
 
-- **Intuitive Command-Line Interface**  
-  Simple and clear CLI for seamless user experience.
+The RLE Compression Program is designed to demonstrate the fundamental principles of data compression using the Run-Length Encoding algorithm. It provides a straightforward way to compress and decompress files by reducing the size of data with repeating patterns. This tool is ideal for educational purposes, learning about compression, or integrating basic RLE compression into other applications.
 
-- **Support for Multiple File Types**  
-  Works with a variety of text-based file formats (e.g., `.txt`, `.csv`, `.log`).
+---
 
-- **Detailed Compression Statistics**  
-  Automatically reports original size, compressed size, and compression ratio after each operation.
+## ✨ Key Features
 
-- **Robust Error Handling**  
-  Gracefully manages invalid inputs, unsupported formats, and corrupted files.
+- **File Compression:** Compress plain text files using the RLE algorithm.
+- **File Decompression:** Restore compressed files back to their original state.
+- **User-Friendly Interface:** Simple command-line interface for easy interaction.
+- **Cross-Platform:** Compatible with major operating systems (Windows, Linux, macOS).
 
-- **Custom Compressed File Format**  
-  Uses a distinct file extension for compressed files, ensuring compatibility with the decompression utility.
+---
+
+## 🛠️ Technologies Used
+
+- **Programming Languages:** C / C++ (or specify your language)
+- **Standard Libraries:** File handling, I/O streams, and string processing
+- **Compilers:** GCC, Clang, MSVC (as applicable)
+
+---
+
+## 🧑‍💻 How It Works
+
+### 1. Run-Length Encoding (RLE) Algorithm
+
+The RLE algorithm replaces sequences of the same data value occurring in many consecutive data elements with a single data value and a count.
+
+**Example:**  
+Input: `AAAAABBBCCDAA`  
+Compressed: `5A3B2C1D2A`
+
+### 2. Program Structure
+
+- **Compression Function:** Reads the input file, compresses repeating characters, and writes the result to an output file.
+- **Decompression Function:** Reads the compressed file and reconstructs the original data.
+- **Main Menu:** Allows the user to choose between compression, decompression, or exiting the program.
 
 ---
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### 1. Prerequisites
 
-- C++ compiler (e.g., `g++`, `clang++`)
-- CMake (optional, for build automation)
+- A C/C++ compiler installed (such as GCC or MSVC)
+- Basic knowledge of the command line
 
-### Installation
+### 2. Building the Program
 
-1. **Clone the repository:**
-    ```bash
-    git clone https://github.com/saicharan7755/Algonive_Project_RLE-Compression-Program.git
-    cd Algonive_Project_RLE-Compression-Program
-    ```
+**On Linux/macOS:**
 
-2. **Compile the source code:**
-    ```bash
-    g++ -o rle_compress rle_compress.cpp
-    g++ -o rle_decompress rle_decompress.cpp
-    ```
-    _Or use CMake if provided._
+```sh
+g++ -o rle_compression rle_compression.cpp
+```
+
+**On Windows (using Command Prompt):**
+
+```sh
+g++ -o rle_compression.exe rle_compression.cpp
+```
+
+> Replace `rle_compression.cpp` with your actual source file name if different.
+
+### 3. Running the Program
+
+After compiling, run the executable from your terminal or command prompt:
+
+```sh
+./rle_compression
+```
+or (on Windows)
+```sh
+rle_compression.exe
+```
 
 ---
 
-## ⚡ Usage
+## 📂 Usage Guide
 
-### Compress a File
+The program operates through a simple menu system:
 
-```bash
-./rle_compress <input_file>
-```
+1. **Compress a File**
+   - Enter the path of the input (plain text) file.
+   - Enter the desired output file name for the compressed data.
+   - The program will display a success message after compression.
 
-- Example:
-    ```bash
-    ./rle_compress sample.txt
-    ```
-    _Output: `sample.rle`_
+2. **Decompress a File**
+   - Enter the path of the compressed file.
+   - Enter the desired output file name for the decompressed data.
+   - The original file content will be restored.
 
-### Decompress a File
-
-```bash
-./rle_decompress <compressed_file>
-```
-
-- Example:
-    ```bash
-    ./rle_decompress sample.rle
-    ```
-    _Output: `sample_decompressed.txt`_
+3. **Exit**
+   - Close the program.
 
 ---
 
-## 📊 Example
+## 📜 Example Code Snippets
 
-Suppose `input.txt` contains:
-```
-aaaaabbccccdd
+### Compression Logic
+
+```cpp
+void compressFile(const std::string& inputPath, const std::string& outputPath) {
+    std::ifstream inFile(inputPath);
+    std::ofstream outFile(outputPath);
+    char current, prev;
+    int count = 1;
+
+    if (inFile.get(prev)) {
+        while (inFile.get(current)) {
+            if (current == prev) {
+                ++count;
+            } else {
+                outFile << count << prev;
+                prev = current;
+                count = 1;
+            }
+        }
+        outFile << count << prev;
+    }
+    inFile.close();
+    outFile.close();
+}
 ```
 
-After compression:
-```
-5a2b4c2d
-```
+### Decompression Logic
 
-Decompression restores the original text.
+```cpp
+void decompressFile(const std::string& inputPath, const std::string& outputPath) {
+    std::ifstream inFile(inputPath);
+    std::ofstream outFile(outputPath);
+    int count;
+    char ch;
+
+    while (inFile >> count >> ch) {
+        for (int i = 0; i < count; ++i)
+            outFile << ch;
+    }
+    inFile.close();
+    outFile.close();
+}
+```
 
 ---
 
-## 🛠️ Project Structure
+## 🧭 Main Menu Loop
 
-- `rle_compress.cpp` &mdash; Source code for compression utility
-- `rle_decompress.cpp` &mdash; Source code for decompression utility
-- `README.md` &mdash; Project documentation
+The program typically follows this loop:
+
+```cpp
+int main() {
+    int choice;
+    do {
+        std::cout << "\n=== RLE Compression Program ===\n";
+        std::cout << "1. Compress a File\n";
+        std::cout << "2. Decompress a File\n";
+        std::cout << "0. Exit\n";
+        std::cout << "Select an option: ";
+        std::cin >> choice;
+        // Call corresponding function based on choice
+    } while (choice != 0);
+    return 0;
+}
+```
 
 ---
 
-## 📎 License
+## 📝 Notes
 
-This project is licensed under the [MIT License](LICENSE).
+- Only plain text files are supported in this basic version.
+- Compression efficiency depends on the repetitiveness of data.
+- Error handling is included for invalid file paths or formats.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request with improvements or bug fixes.
 
 ---
 
-## 👤 Author
+## 📄 License
 
-Developed by [saicharan7755](https://github.com/saicharan7755)
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
+
+## 🙏 Acknowledgments
+
+- Developed as part of an internship project for **Algonive**
+- Inspired by classic data compression algorithms and educational resources
