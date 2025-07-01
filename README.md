@@ -194,4 +194,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## 🙏 Acknowledgments
 
 - Developed as part of an internship project for **Algonive**
-- Inspired by classic data compression algorithms and educational resources
+- Inspired by  a classic data compression algorithms and educational resources
